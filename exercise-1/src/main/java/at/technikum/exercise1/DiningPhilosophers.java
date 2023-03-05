@@ -1,5 +1,6 @@
 package at.technikum.exercise1;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Scanner;
@@ -7,9 +8,12 @@ import java.util.Scanner;
 @Slf4j
 public class DiningPhilosophers {
 
+    @SneakyThrows
     public DiningPhilosophers(int n, int thinkingTime, int eatingTime) {
 
         Philosopher[] philosophers = new Philosopher[n];
+        Thread[] philosopherThreads = new Thread[n];
+
         Object[] forks = new Object[n];
 
         for (int i = 0; i < n; i++) {
@@ -19,7 +23,8 @@ public class DiningPhilosophers {
             Philosopher philosopher = new Philosopher(forks[i], forks[(i + 1) % forks.length], thinkingTime, eatingTime);
 
             philosophers[i] = philosopher;
-            new Thread(philosopher, "philosopher-" + i).start();
+            philosopherThreads[i] = new Thread(philosopher, "philosopher-" + i);
+            philosopherThreads[i].start();
         }
 
         Scanner s = new Scanner(System.in);
@@ -27,6 +32,9 @@ public class DiningPhilosophers {
 
         for (int i = 0; i < n; i++) {
             philosophers[i].stop();
+        }
+        for (int i = 0; i < n; i++) {
+            philosopherThreads[i].join();
         }
         log.info("Finished program through input.");
     }
