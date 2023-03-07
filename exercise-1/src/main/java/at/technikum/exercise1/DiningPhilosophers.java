@@ -60,7 +60,7 @@ public class DiningPhilosophers {
         System.out.println(log);
     }
 
-    class Philosopher implements Runnable {
+    static class Philosopher implements Runnable {
 
         private final Object fork1;
 
