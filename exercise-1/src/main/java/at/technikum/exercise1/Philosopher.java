@@ -1,5 +1,6 @@
 package at.technikum.exercise1;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,30 +11,41 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class Philosopher implements Runnable {
 
-    private final Object forkLeft;
-    private final Object forkRight;
+    private final Object fork1;
+
+    private final Object fork2;
 
     private final int thinkingTime;
+
     private final int eatingTime;
 
-    private volatile boolean stop;
+    private boolean stop;
+
+    @Getter
+    private long totalWaitedTime;
 
     @Override
     public void run() {
+
+        Stopwatch stopwatch = new Stopwatch();
+
         while (!stop) {
             sleepRandom(thinkingTime);
             log.info("Finished thinking");
 
-            synchronized (forkLeft) {
-                log.info("Picked up left fork");
-                synchronized (forkRight) {
-                    log.info("Picked up right fork");
+            stopwatch.start();
+            synchronized (fork1) {
+
+                log.info("Picked up first fork");
+                synchronized (fork2) {
+                    totalWaitedTime += stopwatch.stop();
+                    log.info("Picked up second fork");
                     sleepRandom(eatingTime);
                     log.info("Finished eating");
                 }
-                log.info("Put down right fork");
+                log.info("Put down second fork");
             }
-            log.info("Put down left fork");
+            log.info("Put down first fork");
         }
     }
 

@@ -2,7 +2,7 @@
   <configuration default="false" name="DiningPhilosophers" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="at.technikum.exercise1.DiningPhilosophers" />
     <module name="exercise-1" />
-    <option name="PROGRAM_PARAMETERS" value="8 1111 1111" />
+    <option name="PROGRAM_PARAMETERS" value="8 11 11" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="at.technikum.exercise1.*" />

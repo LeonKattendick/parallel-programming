@@ -19,8 +19,16 @@ public class DiningPhilosophers {
         for (int i = 0; i < n; i++) {
             forks[i] = new Object();
         }
+
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.start();
+
         for (int i = 0; i < n; i++) {
-            Philosopher philosopher = new Philosopher(forks[i], forks[(i + 1) % forks.length], thinkingTime, eatingTime);
+            Object leftFork = forks[i];
+            Object rightFork = forks[(i + 1) % forks.length];
+            boolean isEven = i % 2 == 0;
+
+            Philosopher philosopher = new Philosopher(isEven ? rightFork : leftFork, isEven ? leftFork : rightFork, thinkingTime, eatingTime);
 
             philosophers[i] = philosopher;
             philosopherThreads[i] = new Thread(philosopher, "philosopher-" + i);
@@ -30,13 +38,19 @@ public class DiningPhilosophers {
         Scanner s = new Scanner(System.in);
         s.nextLine();
 
+
         for (int i = 0; i < n; i++) {
             philosophers[i].stop();
         }
+        double totalWaitedTimeAllPhilosophers = 0;
         for (int i = 0; i < n; i++) {
             philosopherThreads[i].join();
+            totalWaitedTimeAllPhilosophers +=  philosophers[i].getTotalWaitedTime();
         }
+
+        double totalRuntime = stopwatch.stop();
         log.info("Finished program through input.");
+        log.info("Total Runtime: {} | Total Time spent waiting: {} | Percentage: {}%", totalRuntime, totalWaitedTimeAllPhilosophers, String.format("%.2f", (totalWaitedTimeAllPhilosophers / totalRuntime) * 100));
     }
 
     public static void main(String[] args) {
