@@ -1,14 +1,10 @@
 package at.technikum.exercise1;
 
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-
+import java.util.Random;
 import java.util.Scanner;
 
-@Slf4j
 public class DiningPhilosophers {
 
-    @SneakyThrows
     public DiningPhilosophers(int n, int thinkingTime, int eatingTime) {
 
         Philosopher[] philosophers = new Philosopher[n];
@@ -44,13 +40,100 @@ public class DiningPhilosophers {
         }
         double totalWaitedTimeAllPhilosophers = 0;
         for (int i = 0; i < n; i++) {
-            philosopherThreads[i].join();
-            totalWaitedTimeAllPhilosophers +=  philosophers[i].getTotalWaitedTime();
+            try {
+                philosopherThreads[i].join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            totalWaitedTimeAllPhilosophers += philosophers[i].getTotalWaitedTime();
         }
 
         double totalRuntime = stopwatch.stop();
-        log.info("Finished program through input.");
-        log.info("Total Runtime: {} | Total Time spent waiting: {} | Percentage: {}%", totalRuntime, totalWaitedTimeAllPhilosophers, String.format("%.2f", (totalWaitedTimeAllPhilosophers / totalRuntime) * 100));
+
+        String log = String.format("Total Runtime: %.0fms | Total Time spent waiting: %.0fms | Percentage: %.2f%%",
+                totalRuntime,
+                totalWaitedTimeAllPhilosophers,
+                (totalWaitedTimeAllPhilosophers / totalRuntime) * 100
+        );
+
+        System.out.println("Finished program through input.");
+        System.out.println(log);
+    }
+
+    class Philosopher implements Runnable {
+
+        private final Object fork1;
+
+        private final Object fork2;
+
+        private final int thinkingTime;
+
+        private final int eatingTime;
+
+        private boolean stop;
+
+        private long totalWaitedTime;
+
+        Philosopher(Object fork1, Object fork2, int thinkingTime, int eatingTime) {
+            this.fork1 = fork1;
+            this.fork2 = fork2;
+            this.thinkingTime = thinkingTime;
+            this.eatingTime = eatingTime;
+        }
+
+        @Override
+        public void run() {
+
+            Stopwatch stopwatch = new Stopwatch();
+
+            while (!stop) {
+                sleepRandom(thinkingTime);
+                System.out.println("[" + Thread.currentThread().getName() + "] Finished thinking");
+
+                stopwatch.start();
+                synchronized (fork1) {
+
+                    System.out.println("[" + Thread.currentThread().getName() + "] Picked up first fork");
+                    synchronized (fork2) {
+                        totalWaitedTime += stopwatch.stop();
+                        System.out.println("[" + Thread.currentThread().getName() + "] Picked up second fork");
+                        sleepRandom(eatingTime);
+                        System.out.println("[" + Thread.currentThread().getName() + "] Finished eating");
+                    }
+                    System.out.println("[" + Thread.currentThread().getName() + "] Put down second fork");
+                }
+                System.out.println("[" + Thread.currentThread().getName() + "] Put down first fork");
+            }
+        }
+
+        private void sleepRandom(int maxTime) {
+            try {
+                Thread.sleep(new Random().nextInt(maxTime));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void stop() {
+            this.stop = true;
+        }
+
+        public long getTotalWaitedTime() {
+            return totalWaitedTime;
+        }
+    }
+
+    static class Stopwatch {
+
+        private long startTime;
+
+        public void start() {
+            this.startTime = System.currentTimeMillis();
+        }
+
+        public long stop() {
+            return System.currentTimeMillis() - this.startTime;
+        }
     }
 
     public static void main(String[] args) {
