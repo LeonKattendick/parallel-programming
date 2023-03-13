@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
+#include <time.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -35,12 +37,17 @@ int main(int argc, char **argv) {
 
     unsigned char *img = malloc(width * height * 3);
 
+    clock_t begin = clock();
+
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             unsigned char *pixel = img + (x + width * y) * 3;
             calculatePixel((float) x, (float) y, pixel, width, height);
         }
     }
+
+    clock_t end = clock();
+    printf("Image generation took %.3f seconds.", (double) (end - begin) / CLOCKS_PER_SEC);
 
     stbi_write_jpg("../out/test.jpg", width, height, 3, img, 100);
     free(img);
