@@ -41,13 +41,13 @@ int main(int argc, char **argv) {
 
     clock_t begin = clock();
 
-        for (int x = 0; x < width; x++) {
-            #pragma omp parallel for
-            for (int y = 0; y < height; y++) {
-                unsigned char *pixel = img + (x + width * y) * 3;
-                calculatePixel((float) x, (float) y, pixel, width, height);
-            }
+    for (int x = 0; x < width; x++) {
+#pragma omp parallel for
+        for (int y = 0; y < height; y++) {
+            unsigned char *pixel = img + (x + width * y) * 3;
+            calculatePixel((float) x, (float) y, pixel, width, height);
         }
+    }
 
     clock_t end = clock();
     printf("Image generation took %.3f seconds.", (double) (end - begin) / CLOCKS_PER_SEC);
