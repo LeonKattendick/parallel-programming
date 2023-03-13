@@ -82,7 +82,7 @@ double parallelMandelbrotExecution(int width, int height, unsigned char *img) {
 
     clock_t begin = clock();
 
-#pragma omp parallel for
+#pragma omp parallel for schedule(static, 1)
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             unsigned char *pixel = img + (x + width * y) * 3;
