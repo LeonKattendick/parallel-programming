@@ -13,6 +13,8 @@
 
 void calculatePixel(float px, float py, unsigned char *pixel, int width, int height);
 
+void coolPixelColoring(unsigned char *pixel, int n);
+
 float transformX(float px, int width);
 
 float transformY(float py, int height);
@@ -39,12 +41,13 @@ int main(int argc, char **argv) {
 
     clock_t begin = clock();
 
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
-            unsigned char *pixel = img + (x + width * y) * 3;
-            calculatePixel((float) x, (float) y, pixel, width, height);
+        for (int x = 0; x < width; x++) {
+            #pragma omp parallel for
+            for (int y = 0; y < height; y++) {
+                unsigned char *pixel = img + (x + width * y) * 3;
+                calculatePixel((float) x, (float) y, pixel, width, height);
+            }
         }
-    }
 
     clock_t end = clock();
     printf("Image generation took %.3f seconds.", (double) (end - begin) / CLOCKS_PER_SEC);
@@ -68,14 +71,18 @@ void calculatePixel(float px, float py, unsigned char *pixel, int width, int hei
         float y = (zy * zx + zx * zy) + cy;
 
         if ((x * x + y * y) > 4) {
-            pixel[0] = n;
-            pixel[1] = n;
-            pixel[2] = n;
+            coolPixelColoring(pixel, n);
             return;
         }
         zx = x;
         zy = y;
     }
+}
+
+void coolPixelColoring(unsigned char *pixel, int n) {
+    pixel[0] = n;
+    pixel[1] = n;
+    pixel[2] = n;
 }
 
 float transformX(float px, int width) {
