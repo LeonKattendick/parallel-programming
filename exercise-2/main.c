@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
         runParallelMandelbrotTest(width, height, img, i, TEST_ITERATIONS, sequentialAverage);
     }
 
-    stbi_write_jpg("../out/test.jpg", width, height, 3, img, 100);
+    stbi_write_jpg("out.jpg", width, height, 3, img, 100);
     free(img);
 
     return 0;
