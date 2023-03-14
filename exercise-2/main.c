@@ -15,14 +15,18 @@ float transformX(float px, int width);
 
 float transformY(float py, int height);
 
-void runParallelMandelbrotTest(int width, int height, unsigned char *img, int numberOfThreads, int iterations);
+void
+runParallelMandelbrotTest(int width, int height, unsigned char *img, int numberOfThreads, int iterations, double ts);
 
-void runSequentialMandelbrotTest(int width, int height, unsigned char *img, int iterations);
+double runSequentialMandelbrotTest(int width, int height, unsigned char *img, int iterations);
 
 double parallelMandelbrotExecution(int width, int height, unsigned char *img);
 
 double sequentialMandelbrotExecution(int width, int height, unsigned char *img);
 
+int TEST_ITERATIONS = 20;
+
+// Iterations in Mandelbrot
 int MAX_ITERATIONS = 100;
 
 float X_MIN = -2.0f;
@@ -43,10 +47,10 @@ int main(int argc, char **argv) {
 
     unsigned char *img = malloc(width * height * 3);
 
-    runSequentialMandelbrotTest(width, height, img, 10);
+    double sequentialAverage = runSequentialMandelbrotTest(width, height, img, TEST_ITERATIONS);
 
     for (int i = 2; i <= omp_get_num_procs(); i++) {
-        runParallelMandelbrotTest(width, height, img, i, 10);
+        runParallelMandelbrotTest(width, height, img, i, TEST_ITERATIONS, sequentialAverage);
     }
 
     stbi_write_jpg("../out/test.jpg", width, height, 3, img, 100);
@@ -55,7 +59,8 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void runParallelMandelbrotTest(int width, int height, unsigned char *img, int numberOfThreads, int iterations) {
+void
+runParallelMandelbrotTest(int width, int height, unsigned char *img, int numberOfThreads, int iterations, double ts) {
 
     omp_set_num_threads(numberOfThreads);
 
@@ -64,18 +69,22 @@ void runParallelMandelbrotTest(int width, int height, unsigned char *img, int nu
         sum += parallelMandelbrotExecution(width, height, img);
     }
 
-    printf("Parallel run (threads: %02d, iterations: %d) took %.3f seconds.\n", numberOfThreads, iterations,
-           sum / iterations);
+    double average = (sum / (double) iterations) * 1000.0;
+    printf("Parallel run (threads: %02d, iterations: %d) took %.1f milliseconds (Speedup: %.1fx).\n", numberOfThreads,
+           iterations, average, ts / average);
 }
 
-void runSequentialMandelbrotTest(int width, int height, unsigned char *img, int iterations) {
+double runSequentialMandelbrotTest(int width, int height, unsigned char *img, int iterations) {
 
     double sum = 0.0;
     for (int i = 0; i < iterations; i++) {
         sum += sequentialMandelbrotExecution(width, height, img);
     }
 
-    printf("Sequential run (iterations: %d) took %.3f seconds.\n", iterations, sum / iterations);
+    double average = (sum / (double) iterations) * 1000.0;
+    printf("Sequential run (iterations: %d) took %.1f milliseconds.\n", iterations, average);
+
+    return average;
 }
 
 double parallelMandelbrotExecution(int width, int height, unsigned char *img) {
