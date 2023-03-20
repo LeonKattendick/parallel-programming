@@ -6,4 +6,6 @@ public interface SortAlgorithm {
 
     int getThreshold();
 
+    ListUtil.ParallelType getType();
+
 }

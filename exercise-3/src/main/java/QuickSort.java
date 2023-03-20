@@ -2,7 +2,7 @@ import util.ListUtil;
 import util.SortAlgorithm;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,8 +12,11 @@ public class QuickSort implements SortAlgorithm {
 
     private final int threshold;
 
-    public QuickSort(int threshold) {
+    private final ListUtil.ParallelType type;
+
+    public QuickSort(int threshold, ListUtil.ParallelType type) {
         this.threshold = threshold;
+        this.type = type;
     }
 
     public int[] sort(int[] elements, final int left, final int right) {
@@ -30,14 +33,27 @@ public class QuickSort implements SortAlgorithm {
 
     private void quickSort(int[] elements, final int left, final int right) {
 
+        int amountOfElements = right - left;
         int index = partition(elements, left, right);
 
-        if (left < index - 1) {
-            quickSort(elements, left, index - 1);
-        }
-
-        if (index < right) {
-            quickSort(elements, index, right);
+        if (type == ListUtil.ParallelType.SEQUENTIAL || (type == ListUtil.ParallelType.THRESHOLD && amountOfElements <= threshold)) {
+            if (left < index - 1) {
+                quickSort(elements, left, index - 1);
+            }
+            if (index < right) {
+                quickSort(elements, index, right);
+            }
+        } else {
+            try {
+                if (left < index - 1) {
+                    executorService.submit(() -> quickSort(elements, left, index - 1)).get();
+                }
+                if (index < right) {
+                    executorService.submit(() -> quickSort(elements, index, right)).get();
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -72,18 +88,46 @@ public class QuickSort implements SortAlgorithm {
         return this.threshold;
     }
 
+    @Override
+    public ListUtil.ParallelType getType() {
+        return type;
+    }
+
     public static void main(String[] args) {
+        thresholdQuickSort();
+        sequentialQuickSort();
+        unlimitedQuickSort();
+    }
 
-        int MIN_LENGTH = 100_000;
-        int MAX_LENGTH = 100_000_000;
+    private static void sequentialQuickSort() {
 
-        List<Integer> thresholds = List.of(0);
+        int MIN_LENGTH = 1_000_000;
+        int MAX_LENGTH = 10_000_000;
 
         for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
-            for (int threshold : thresholds) {
-                QuickSort quickSort = new QuickSort(threshold);
-                ListUtil.executeSortAlgorithm(quickSort, length);
-            }
+            QuickSort quickSort = new QuickSort(0, ListUtil.ParallelType.SEQUENTIAL);
+            ListUtil.executeSortAlgorithm(quickSort, length);
+        }
+    }
+
+    private static void unlimitedQuickSort() {
+
+        int MIN_LENGTH = 10_000;
+        int MAX_LENGTH = 100_000;
+
+        for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
+            QuickSort quickSort = new QuickSort(0, ListUtil.ParallelType.UNLIMITED);
+            ListUtil.executeSortAlgorithm(quickSort, length);
+        }
+    }
+
+    private static void thresholdQuickSort() {
+
+        List<Integer> thresholds = List.of(10000, 50000, 100000);
+
+        for (int threshold : thresholds) {
+            QuickSort quickSort = new QuickSort(threshold, ListUtil.ParallelType.THRESHOLD);
+            ListUtil.executeSortAlgorithm(quickSort, 10_000_000);
         }
     }
 }
