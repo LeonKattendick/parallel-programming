@@ -101,8 +101,8 @@ public class QuickSort {
         int[] sorted = sort.sort(elements, 0, length-1);
         double sortTime = stopwatch.stop();
 
-         System.out.println("Unsorted List: " + Arrays.toString(elements));
-         System.out.println("Sorted List: " + Arrays.toString(sorted));
+        // System.out.println("Unsorted List: " + Arrays.toString(elements));
+        // System.out.println("Sorted List: " + Arrays.toString(sorted));
         System.out.println(String.format("Needed calculationTime: %.10fms", sortTime));
     }
 }
