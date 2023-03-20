@@ -1,13 +1,11 @@
-import com.sun.source.tree.NewArrayTree;
+import util.ListUtil;
+import util.SortAlgorithm;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MergeSort {
+public class MergeSort implements SortAlgorithm {
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(16);
 
@@ -17,89 +15,65 @@ public class MergeSort {
         this.threshold = threshold;
     }
 
-    public int[] mergeSort(int[] elements, int left, int right) {
-        // End of recursion reached?
+    public int[] sort(int[] elements, int left, int right) {
         if (left == right) return new int[]{elements[left]};
 
         int middle = left + (right - left) / 2;
-        int[] leftArray = mergeSort(elements, left, middle);
-        int[] rightArray = mergeSort(elements, middle + 1, right);
+
+        int[] leftArray = sort(elements, left, middle);
+        int[] rightArray = sort(elements, middle + 1, right);
+
         return merge(leftArray, rightArray);
     }
 
+    @Override
+    public int getThreshold() {
+        return this.threshold;
+    }
+
     private int[] merge(int[] leftArray, int[] rightArray) {
-        int leftLen = leftArray.length;
-        int rightLen = rightArray.length;
+        int leftLength = leftArray.length;
+        int rightLength = rightArray.length;
 
-        int[] target = new int[leftLen + rightLen];
-        int targetPos = 0;
-        int leftPos = 0;
-        int rightPos = 0;
+        int targetPosition = 0, leftPosition = 0, rightPosition = 0;
+        int[] target = new int[leftLength + rightLength];
 
-        // As long as both arrays contain elements...
-        while (leftPos < leftLen && rightPos < rightLen) {
-            // Which one is smaller?
-            int leftValue = leftArray[leftPos];
-            int rightValue = rightArray[rightPos];
+        while (leftPosition < leftLength && rightPosition < rightLength) {
+            int leftValue = leftArray[leftPosition];
+            int rightValue = rightArray[rightPosition];
+
             if (leftValue <= rightValue) {
-                target[targetPos++] = leftValue;
-                leftPos++;
+                target[targetPosition++] = leftValue;
+                leftPosition++;
             } else {
-                target[targetPos++] = rightValue;
-                rightPos++;
+                target[targetPosition++] = rightValue;
+                rightPosition++;
             }
         }
-        // Copy the rest
-        while (leftPos < leftLen) {
-            target[targetPos++] = leftArray[leftPos++];
+
+        while (leftPosition < leftLength) {
+            target[targetPosition++] = leftArray[leftPosition++];
         }
-        while (rightPos < rightLen) {
-            target[targetPos++] = rightArray[rightPos++];
+
+        while (rightPosition < rightLength) {
+            target[targetPosition++] = rightArray[rightPosition++];
         }
+
         return target;
     }
 
-    static class Stopwatch {
-
-        private long startTime;
-
-        public void start() {
-            this.startTime = System.currentTimeMillis();
-        }
-
-        public long stop() {
-            return System.currentTimeMillis() - this.startTime;
-        }
-    }
-
     public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Gebe die Länge der Liste (und den Thread Threshold) als Argument mit.");
-            return;
+
+        int MIN_LENGTH = 100_000;
+        int MAX_LENGTH = 100_000_000;
+
+        List<Integer> thresholds = List.of(0);
+
+        for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
+            for (int threshold : thresholds) {
+                MergeSort mergeSort = new MergeSort(threshold);
+                ListUtil.executeSortAlgorithm(mergeSort, length);
+            }
         }
-
-        int length = Integer.parseInt(args[0]);
-        int threshold = args.length == 2 ? Integer.parseInt(args[1]) : Integer.MAX_VALUE;
-        int seed = 0;
-        Stopwatch stopwatch = new Stopwatch();
-
-        int[] elements = new int[length];
-
-        Random r = new Random(seed);
-        for (int i = 0; i < length; i++) {
-            elements[i] = r.nextInt(length * 1000);
-        }
-        System.out.println();
-        System.out.println("Starting MergeSort with length = " + length + ", threshold = " + threshold);
-        System.out.println();
-
-        MergeSort sort = new MergeSort(threshold);
-        stopwatch.start();
-        int[] sorted = sort.mergeSort(elements, 0, length-1);
-        double sortTime = stopwatch.stop();
-
-        // System.out.println("Unsorted List: " + Arrays.toString(elements));
-        // System.out.println("Sorted List: " + Arrays.toString(sorted));
-        System.out.println(String.format("Needed calculationTime: %.10fms", sortTime));
     }
 }
