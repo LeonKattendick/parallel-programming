@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class ListUtil {
 
-    private static final int ITERATIONS =1;
+    private static final int ITERATIONS = 1;
 
     static class Stopwatch {
 
@@ -17,10 +17,6 @@ public class ListUtil {
         public long stop() {
             return System.currentTimeMillis() - this.startTime;
         }
-    }
-
-    public enum ParallelType {
-        SEQUENTIAL, UNLIMITED, THRESHOLD;
     }
 
     public static boolean isSorted(int[] array) {
@@ -38,7 +34,6 @@ public class ListUtil {
             elements[i] = r.nextInt();
         }
 
-
         long summedTime = 0;
         for (int i = 0; i < ITERATIONS; i++) {
 
@@ -49,6 +44,6 @@ public class ListUtil {
 
             if (!ListUtil.isSorted(sorted)) System.out.println("#### LISTE NICHT SORTIERT ####");
         }
-        System.out.printf("[%s] Length %-10d | Threshold: %-10d = %.2fms\n", sortAlgorithm.getType(), length, sortAlgorithm.getThreshold(), summedTime / (double) ITERATIONS);
+        System.out.printf("Length %-10d | Threshold: %-10d = %.2fms\n", length, sortAlgorithm.getThreshold(), summedTime / (double) ITERATIONS);
     }
 }
