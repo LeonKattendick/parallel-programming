@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="at.technikum.e3.MergeSort" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="at.technikum.e3.MergeSort" />
+  <configuration default="false" name="MergeSort" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="MergeSort" />
     <module name="exercise-3" />
     <method v="2">
       <option name="Make" enabled="true" />

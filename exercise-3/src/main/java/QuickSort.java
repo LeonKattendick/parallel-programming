@@ -1,5 +1,3 @@
-package at.technikum.e3;
-
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
 

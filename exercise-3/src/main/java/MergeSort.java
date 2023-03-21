@@ -1,5 +1,3 @@
-package at.technikum.e3;
-
 import java.util.concurrent.RecursiveAction;
 
 public class MergeSort extends RecursiveAction {

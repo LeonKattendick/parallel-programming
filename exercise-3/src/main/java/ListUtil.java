@@ -1,5 +1,3 @@
-package at.technikum.e3;
-
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 
