@@ -1,3 +1,4 @@
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveAction;
 
 public class MergeSort extends RecursiveAction {
@@ -17,18 +18,23 @@ public class MergeSort extends RecursiveAction {
 
     @Override
     protected void compute() {
-
+        elements = mergeSort(elements, left, right);
     }
 
-    public int[] sort(int[] elements, int left, int right) {
+    private int[] mergeSort(int[] elements, int left, int right) {
         if (left == right) return new int[]{elements[left]};
 
         int middle = left + (right - left) / 2;
 
-        int[] leftArray = sort(elements, left, middle);
-        int[] rightArray = sort(elements, middle + 1, right);
+        MergeSort leftMerge = new MergeSort(getThreshold(), elements, left, middle);
+        MergeSort rightMerge = new MergeSort(getThreshold(), elements, middle + 1, right);
 
-        return merge(leftArray, rightArray);
+        ForkJoinTask<Void> fork = leftMerge.fork();
+        rightMerge.invoke();
+
+        fork.join();
+
+        return merge(leftMerge.getElements(), rightMerge.getElements());
     }
 
     private int[] merge(int[] leftArray, int[] rightArray) {

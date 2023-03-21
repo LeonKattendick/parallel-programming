@@ -46,7 +46,6 @@ public class QuickSort extends RecursiveAction {
             while (elements[leftPosition] < pivot) {
                 leftPosition++;
             }
-
             while (elements[rightPosition] > pivot) {
                 rightPosition--;
             }
