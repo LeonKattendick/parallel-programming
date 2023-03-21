@@ -1,12 +1,25 @@
-import util.ListUtil;
-import util.SortAlgorithm;
+package at.technikum.e3;
 
-public class MergeSort implements SortAlgorithm {
+import java.util.concurrent.RecursiveAction;
+
+public class MergeSort extends RecursiveAction {
 
     private final int threshold;
 
-    public MergeSort(int threshold) {
+    private int[] elements;
+
+    private final int left, right;
+
+    public MergeSort(int threshold, int[] elements, int left, int right) {
         this.threshold = threshold;
+        this.elements = elements;
+        this.left = left;
+        this.right = right;
+    }
+
+    @Override
+    protected void compute() {
+
     }
 
     public int[] sort(int[] elements, int left, int right) {
@@ -14,10 +27,8 @@ public class MergeSort implements SortAlgorithm {
 
         int middle = left + (right - left) / 2;
 
-        int[] leftArray, rightArray;
-
-        leftArray = sort(elements, left, middle);
-        rightArray = sort(elements, middle + 1, right);
+        int[] leftArray = sort(elements, left, middle);
+        int[] rightArray = sort(elements, middle + 1, right);
 
         return merge(leftArray, rightArray);
     }
@@ -45,7 +56,6 @@ public class MergeSort implements SortAlgorithm {
         while (leftPosition < leftLength) {
             target[targetPosition++] = leftArray[leftPosition++];
         }
-
         while (rightPosition < rightLength) {
             target[targetPosition++] = rightArray[rightPosition++];
         }
@@ -53,9 +63,12 @@ public class MergeSort implements SortAlgorithm {
         return target;
     }
 
-    @Override
     public int getThreshold() {
         return this.threshold;
+    }
+
+    public int[] getElements() {
+        return this.elements;
     }
 
     public static void main(String[] args) {
@@ -64,8 +77,7 @@ public class MergeSort implements SortAlgorithm {
         int MAX_LENGTH = 10_000_000;
 
         for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
-            MergeSort mergeSort = new MergeSort(0);
-            ListUtil.executeSortAlgorithm(mergeSort, length);
+            ListUtil.executeSortAlgorithm(false, 0, length);
         }
     }
 }

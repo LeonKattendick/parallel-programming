@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="QuickSort" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="QuickSort" />
+  <configuration default="false" name="at.technikum.e3.QuickSort" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="at.technikum.e3.QuickSort" />
     <module name="exercise-3" />
     <method v="2">
       <option name="Make" enabled="true" />

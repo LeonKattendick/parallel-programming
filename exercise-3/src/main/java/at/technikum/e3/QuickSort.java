@@ -1,41 +1,44 @@
-import util.ListUtil;
-import util.SortAlgorithm;
+package at.technikum.e3;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveAction;
 
-public class QuickSort implements SortAlgorithm {
+public class QuickSort extends RecursiveAction {
 
     private final int threshold;
 
-    public QuickSort(int threshold) {
+    private final int[] elements;
+
+    private final int left, right;
+
+    public QuickSort(int threshold, int[] elements, int left, int right) {
         this.threshold = threshold;
+        this.elements = elements;
+        this.left = left;
+        this.right = right;
     }
 
-    public int[] sort(int[] elements, final int left, final int right) {
-        int[] array = new int[elements.length];
-
-        System.arraycopy(elements, 0, array, 0, array.length);
-        quickSort(array, left, right);
-
-        return array;
+    @Override
+    protected void compute() {
+        quickSort(elements, left, right);
     }
 
-    private void quickSort(int[] elements, final int left, final int right) {
+    private void quickSort(int[] elements, int left, int right) {
 
+        ForkJoinTask<Void> fork = null;
         int index = partition(elements, left, right);
 
         if (left < index - 1) {
-            quickSort(elements, left, index - 1);
+            fork = new QuickSort(getThreshold(), elements, left, index - 1).fork();
         }
         if (index < right) {
-            quickSort(elements, index, right);
+            new QuickSort(getThreshold(), elements, index, right).invoke();
         }
+
+        if (fork != null) fork.join();
     }
 
-    private int partition(int[] elements, final int left, final int right) {
+    private int partition(int[] elements, int left, int right) {
         int pivot = elements[(left + right) / 2];
         int leftPosition = left;
         int rightPosition = right;
@@ -61,9 +64,12 @@ public class QuickSort implements SortAlgorithm {
         return leftPosition;
     }
 
-    @Override
     public int getThreshold() {
         return this.threshold;
+    }
+
+    public int[] getElements() {
+        return this.elements;
     }
 
     public static void main(String[] args) {
@@ -72,8 +78,7 @@ public class QuickSort implements SortAlgorithm {
         int MAX_LENGTH = 10_000_000;
 
         for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
-            QuickSort quickSort = new QuickSort(0);
-            ListUtil.executeSortAlgorithm(quickSort, length);
+            ListUtil.executeSortAlgorithm(true, 0, length);
         }
     }
 }
