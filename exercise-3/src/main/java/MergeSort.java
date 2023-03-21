@@ -24,17 +24,27 @@ public class MergeSort extends RecursiveAction {
     private int[] mergeSort(int[] elements, int left, int right) {
         if (left == right) return new int[]{elements[left]};
 
-        int middle = left + (right - left) / 2;
+        int elementsLeft = right - left;
+        int middle = left + elementsLeft / 2;
+        int[] leftArray, rightArray;
 
-        MergeSort leftMerge = new MergeSort(getThreshold(), elements, left, middle);
-        MergeSort rightMerge = new MergeSort(getThreshold(), elements, middle + 1, right);
 
-        ForkJoinTask<Void> fork = leftMerge.fork();
-        rightMerge.invoke();
+        if (elementsLeft <= getThreshold()) {
+            leftArray = mergeSort(elements, left, middle);
+            rightArray = mergeSort(elements, middle + 1, right);
+        } else {
+            MergeSort leftMerge = new MergeSort(getThreshold(), elements, left, middle);
+            MergeSort rightMerge = new MergeSort(getThreshold(), elements, middle + 1, right);
+            ForkJoinTask<Void> fork = leftMerge.fork();
+            rightMerge.invoke();
 
-        fork.join();
+            fork.join();
+            leftArray = leftMerge.getElements();
+            rightArray = rightMerge.getElements();
+        }
 
-        return merge(leftMerge.getElements(), rightMerge.getElements());
+
+        return merge(leftArray, rightArray);
     }
 
     private int[] merge(int[] leftArray, int[] rightArray) {
@@ -81,7 +91,7 @@ public class MergeSort extends RecursiveAction {
         int MAX_LENGTH = 10_000_000;
 
         for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
-            ListUtil.executeSortAlgorithm(false, 0, length);
+            ListUtil.executeSortAlgorithm(false, 50000, length);
         }
     }
 }

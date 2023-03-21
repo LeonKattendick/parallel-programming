@@ -23,17 +23,27 @@ public class QuickSort extends RecursiveAction {
 
     private void quickSort(int[] elements, int left, int right) {
 
-        ForkJoinTask<Void> fork = null;
+        int elementsLeft = right - left;
         int index = partition(elements, left, right);
 
-        if (left < index - 1) {
-            fork = new QuickSort(getThreshold(), elements, left, index - 1).fork();
-        }
-        if (index < right) {
-            new QuickSort(getThreshold(), elements, index, right).invoke();
-        }
+        if (elementsLeft <= getThreshold()) {
+            if (left < index - 1) {
+                quickSort(elements, left, index - 1);
+            }
+            if (index < right) {
+                quickSort(elements, index, right);
+            }
+        } else {
+            ForkJoinTask<Void> fork = null;
+            if (left < index - 1) {
+                fork = new QuickSort(getThreshold(), elements, left, index - 1).fork();
+            }
+            if (index < right) {
+                new QuickSort(getThreshold(), elements, index, right).invoke();
+            }
 
-        if (fork != null) fork.join();
+            if (fork != null) fork.join();
+        }
     }
 
     private int partition(int[] elements, int left, int right) {
@@ -75,7 +85,7 @@ public class QuickSort extends RecursiveAction {
         int MAX_LENGTH = 10_000_000;
 
         for (int length = MIN_LENGTH; length <= MAX_LENGTH; length += MIN_LENGTH) {
-            ListUtil.executeSortAlgorithm(true, 0, length);
+            ListUtil.executeSortAlgorithm(true, 50000, length);
         }
     }
 }
