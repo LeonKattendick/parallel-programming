@@ -1,5 +1,7 @@
 package at.technikum.processor.ui;
 
+import at.technikum.processor.listener.ImageLoadingListener;
+
 import javax.swing.*;
 
 public class ControlPanel extends JPanel {
@@ -7,6 +9,7 @@ public class ControlPanel extends JPanel {
     public ControlPanel() {
         JButton importButton = new JButton("Importieren");
         importButton.setFocusPainted(false);
+        importButton.addActionListener(new ImageLoadingListener());
 
         JButton saveButton = new JButton("Speichern");
         saveButton.setEnabled(false);
