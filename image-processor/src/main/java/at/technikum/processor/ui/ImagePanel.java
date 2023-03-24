@@ -1,6 +1,7 @@
 package at.technikum.processor.ui;
 
 import at.technikum.processor.ImageProcessor;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.imgscalr.AsyncScalr;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
+@Getter
 public class ImagePanel extends JPanel {
 
     private final JLabel label;
