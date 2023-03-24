@@ -28,6 +28,12 @@ public class ImageProcessor extends JFrame {
         addComponentListener(new ResizeListener());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         URL logoUrl = ImageProcessor.class.getResource("/images/icon.png");
         if (logoUrl != null) setIconImage(new ImageIcon(logoUrl).getImage());
 

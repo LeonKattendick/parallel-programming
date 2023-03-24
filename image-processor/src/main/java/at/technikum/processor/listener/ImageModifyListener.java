@@ -2,33 +2,25 @@ package at.technikum.processor.listener;
 
 import at.technikum.processor.ImageProcessor;
 import at.technikum.processor.util.ImageAction;
-import at.technikum.processor.util.strategy.BlurStrategy;
+import lombok.extern.slf4j.Slf4j;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+@Slf4j
 public class ImageModifyListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         ImageAction imageAction = (ImageAction) ImageProcessor.getInstance().getControlPanel().getComboBox().getSelectedItem();
-        BufferedImage image = (BufferedImage) ImageProcessor.getInstance().getImagePanel().getImage();
+        if (imageAction == null) return;
 
-        //Strategy Pattern
-        switch (imageAction){
-            case BLUR:
-                new BlurStrategy().convert(image);
-                break;
+        BufferedImage image = ImageProcessor.getInstance().getImagePanel().getImage();
 
-            case INVERT:
-                break;
-
-            case GREYSCALE:
-                break;
-        }
+        log.info("Trying to use {} on image", imageAction);
+        imageAction.getStrategy().convert(image);
 
     }
-
 }

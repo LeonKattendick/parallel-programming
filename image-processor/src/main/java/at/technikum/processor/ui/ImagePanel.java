@@ -45,6 +45,8 @@ public class ImagePanel extends JPanel {
         image = ImageIO.read(file);
 
         label.setText(null);
+        ImageProcessor.getInstance().getControlPanel().enableImageEditing();
+
         resizeImage(ImageProcessor.getInstance().getImagePanel().getSize());
     }
 

@@ -10,23 +10,33 @@ import javax.swing.*;
 @Getter
 public class ControlPanel extends JPanel {
 
-    JComboBox<ImageAction> comboBox = new JComboBox<>(ImageAction.values());
+    private final JButton saveButton;
+
+    private final JButton executeButton;
+
+    private final JComboBox<ImageAction> comboBox;
 
     public ControlPanel() {
-        JButton importButton = new JButton("Importieren");
-        importButton.setFocusPainted(false);
+        JButton importButton = new ControlJButton("Importieren");
         importButton.addActionListener(new ImageLoadingListener());
 
-        JButton saveButton = new JButton("Speichern");
+        saveButton = new ControlJButton("Speichern");
         saveButton.setEnabled(false);
 
-        JButton executeButton = new JButton("Anwenden");
-        executeButton.addActionListener(new ImageModifyListener());
+        comboBox = new JComboBox<>(ImageAction.values());
+
+        executeButton = new ControlJButton("Anwenden");
         executeButton.setEnabled(false);
+        executeButton.addActionListener(new ImageModifyListener());
 
         add(importButton);
         add(saveButton);
         add(comboBox);
         add(executeButton);
+    }
+
+    public void enableImageEditing() {
+        saveButton.setEnabled(true);
+        executeButton.setEnabled(true);
     }
 }
