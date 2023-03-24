@@ -2,9 +2,9 @@ package at.technikum.processor.ui;
 
 import at.technikum.processor.ImageProcessor;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.imgscalr.AsyncScalr;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -13,7 +13,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @Getter
@@ -21,6 +20,7 @@ public class ImagePanel extends JPanel {
 
     private final JLabel label;
 
+    @Setter
     private BufferedImage image;
 
     private int resizedWidth;
@@ -42,11 +42,13 @@ public class ImagePanel extends JPanel {
     public void loadImage(File file) {
         log.info("Trying to load image {}", file);
 
-        image = ImageIO.read(file);
-
+        replaceImage(ImageIO.read(file));
         label.setText(null);
         ImageProcessor.getInstance().getControlPanel().enableImageEditing();
+    }
 
+    public void replaceImage(BufferedImage image) {
+        this.image = image;
         resizeImage(ImageProcessor.getInstance().getImagePanel().getSize());
     }
 
