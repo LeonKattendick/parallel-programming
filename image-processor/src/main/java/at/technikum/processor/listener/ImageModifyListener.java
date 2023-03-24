@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class ImageModifyListener implements ActionListener {
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
