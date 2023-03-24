@@ -1,7 +1,6 @@
 package at.technikum.processor.listener;
 
 import at.technikum.processor.ImageProcessor;
-import at.technikum.processor.ui.ControlPanel;
 import at.technikum.processor.util.ImageAction;
 import at.technikum.processor.util.strategy.BlurStrategy;
 
