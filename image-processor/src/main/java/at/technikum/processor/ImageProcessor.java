@@ -8,12 +8,16 @@ import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.concurrent.ForkJoinPool;
 
 @Getter
 public class ImageProcessor extends JFrame {
 
     @Getter
     private static ImageProcessor instance;
+
+    @Getter
+    private static final ForkJoinPool forkJoinPool = new ForkJoinPool();
 
     private final ControlPanel controlPanel;
 
