@@ -24,6 +24,7 @@ public class ImageSavingListener implements ActionListener {
         if (!file.getName().contains(".")) file = new File(file + ".png");
 
         ImageProcessor.getInstance().getImagePanel().saveImage(file);
+        JOptionPane.showMessageDialog(null, "Das Bild wurde als " + file.getName() + " gespeichert!");
 
     }
 }

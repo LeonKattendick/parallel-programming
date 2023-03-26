@@ -26,9 +26,8 @@ public class InvertStrategy implements ImageStrategy {
 
     @Override
     public void convertParallel(BufferedImage image) {
-        ParallelismUtil.parallelFor((i) -> {
-            int chunkSize = image.getWidth() / CoreUtil.getNumberOfProcessors();
-            IntStream.range(i * chunkSize, i * chunkSize + chunkSize).forEach(x -> {
+        ParallelismUtil.parallelFor(image.getWidth(), (start, end) -> {
+            IntStream.range(start, end).forEach(x -> {
                 for (int y = 0; y < image.getHeight(); ++y) {
 
                     int rgb = image.getRGB(x, y);
