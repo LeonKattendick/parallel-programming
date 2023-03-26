@@ -1,9 +1,9 @@
 package at.technikum.processor.util;
 
-import at.technikum.processor.util.strategy.BlurStrategy;
-import at.technikum.processor.util.strategy.GrayscaleStrategy;
+import at.technikum.processor.util.strategy.impl.BlurStrategy;
+import at.technikum.processor.util.strategy.impl.GrayscaleStrategy;
 import at.technikum.processor.util.strategy.ImageStrategy;
-import at.technikum.processor.util.strategy.InvertStrategy;
+import at.technikum.processor.util.strategy.impl.InvertStrategy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

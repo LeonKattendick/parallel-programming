@@ -1,4 +1,6 @@
-package at.technikum.processor.util.strategy;
+package at.technikum.processor.util.strategy.impl;
+
+import at.technikum.processor.util.strategy.ImageStrategy;
 
 import java.awt.image.BufferedImage;
 
