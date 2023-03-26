@@ -1,6 +1,7 @@
 package at.technikum.processor.ui;
 
 import at.technikum.processor.ImageProcessor;
+import at.technikum.processor.util.FileUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -45,6 +46,12 @@ public class ImagePanel extends JPanel {
         replaceImage(ImageIO.read(file));
         label.setText(null);
         ImageProcessor.getInstance().getControlPanel().enableImageEditing();
+    }
+
+    @SneakyThrows
+    public void saveImage(File file) {
+        log.info("Trying to save image {}", file);
+        ImageIO.write(image, FileUtil.getImageTypeFromFile(file), file);
     }
 
     public void replaceImage(BufferedImage image) {

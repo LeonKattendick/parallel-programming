@@ -2,6 +2,7 @@ package at.technikum.processor.ui;
 
 import at.technikum.processor.listener.ImageLoadingListener;
 import at.technikum.processor.listener.ImageModifyListener;
+import at.technikum.processor.listener.ImageSavingListener;
 import at.technikum.processor.listener.ParallelSwitchListener;
 import at.technikum.processor.util.ImageAction;
 import lombok.Getter;
@@ -30,14 +31,17 @@ public class ControlPanel extends JPanel {
 
         saveButton = new ControlJButton("Speichern");
         saveButton.setEnabled(false);
+        saveButton.addActionListener(new ImageSavingListener());
 
         comboBox = new JComboBox<>(ImageAction.values());
+        comboBox.setEnabled(false);
 
         executeButton = new ControlJButton("Anwenden");
         executeButton.setEnabled(false);
         executeButton.addActionListener(new ImageModifyListener());
 
         parallelSwitchButton = new ControlJButton("Parallel");
+        parallelSwitchButton.setEnabled(false);
         parallelSwitchButton.addActionListener(new ParallelSwitchListener());
 
         timeLabel = new JLabel();
@@ -53,7 +57,9 @@ public class ControlPanel extends JPanel {
 
     public void enableImageEditing() {
         saveButton.setEnabled(true);
+        comboBox.setEnabled(true);
         executeButton.setEnabled(true);
+        parallelSwitchButton.setEnabled(true);
     }
 
     public void switchParallelState() {
