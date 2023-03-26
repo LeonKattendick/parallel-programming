@@ -7,7 +7,12 @@ import java.awt.image.BufferedImage;
 public class InvertStrategy implements ImageStrategy {
 
     @Override
-    public void convert(BufferedImage image) {
+    public void convertSerial(BufferedImage image) {
+
+    }
+
+    @Override
+    public void convertParallel(BufferedImage image) {
 
     }
 }

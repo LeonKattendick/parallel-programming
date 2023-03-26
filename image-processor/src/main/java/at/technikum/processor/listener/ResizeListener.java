@@ -11,7 +11,7 @@ public class ResizeListener implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        ImageProcessor.getInstance().getImagePanel().resizeImage(e.getComponent().getSize());
+        ImageProcessor.getInstance().getImagePanel().resizeImageOnSizeChange(e.getComponent().getSize());
     }
 
     @Override

@@ -40,7 +40,8 @@ public class ControlPanel extends JPanel {
         parallelSwitchButton = new ControlJButton("Parallel");
         parallelSwitchButton.addActionListener(new ParallelSwitchListener());
 
-        timeLabel = new JLabel("Zeit: 0ms");
+        timeLabel = new JLabel();
+        writeTime(0);
 
         add(importButton);
         add(saveButton);
@@ -58,5 +59,9 @@ public class ControlPanel extends JPanel {
     public void switchParallelState() {
         parallelEnabled = !parallelEnabled;
         parallelSwitchButton.setText(parallelEnabled ? "Parallel" : "Seriell");
+    }
+
+    public void writeTime(long time) {
+        timeLabel.setText("Zeit: " + time + "ms");
     }
 }

@@ -52,9 +52,12 @@ public class ImagePanel extends JPanel {
         resizeImage(ImageProcessor.getInstance().getImagePanel().getSize());
     }
 
-    public void resizeImage(Dimension dimension) {
+    public void resizeImageOnSizeChange(Dimension dimension) {
+        if (resizedWidth == dimension.getWidth() && resizedHeight == dimension.getHeight()) resizeImage(dimension);
+    }
+
+    private void resizeImage(Dimension dimension) {
         if (image == null) return;
-        if (resizedWidth == dimension.getWidth() && resizedHeight == dimension.getHeight()) return;
 
         resizedWidth = (int) dimension.getWidth();
         resizedHeight = (int) dimension.getHeight();
