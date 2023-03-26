@@ -5,7 +5,6 @@ import at.technikum.processor.util.ParallelismUtil;
 import at.technikum.processor.util.strategy.ImageStrategy;
 
 import java.awt.image.BufferedImage;
-import java.util.stream.IntStream;
 
 public class GrayscaleStrategy implements ImageStrategy {
 
@@ -26,7 +25,7 @@ public class GrayscaleStrategy implements ImageStrategy {
     @Override
     public void convertParallel(BufferedImage image) {
         ParallelismUtil.parallelFor(image.getWidth(), (start, end) -> {
-            IntStream.range(start, end).forEach(x -> {
+            for (int x = start; x < end; x++) {
                 for (int y = 0; y < image.getHeight(); ++y) {
 
                     int rgb = image.getRGB(x, y);
@@ -34,7 +33,7 @@ public class GrayscaleStrategy implements ImageStrategy {
 
                     image.setRGB(x, y, gray);
                 }
-            });
+            }
         });
         ImageProcessor.getInstance().getImagePanel().replaceImage(image);
     }
