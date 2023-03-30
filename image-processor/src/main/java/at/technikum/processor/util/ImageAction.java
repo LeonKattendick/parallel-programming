@@ -12,10 +12,10 @@ public enum ImageAction {
     GREYSCALE("Graustufen", new GrayscaleStrategy()),
     INVERT("Invertieren", new InvertStrategy()),
     HUE_UP("Hue", new HueStrategy()),
-    SATURATION_UP("Saturation (hoch)", new SaturationUpStrategy()),
-    SATURATION_DOWN("Saturation (runter)", new SaturationDownStrategy()),
-    BRIGHTNESS_UP("Helligkeit (hoch)", new BrightnessUpStrategy()),
-    BRIGHTNESS_DOWN("Helligkeit (runter)", new BrightnessDownStrategy());
+    SATURATION_UP("Saturation (+10%)", new SaturationUpStrategy()),
+    SATURATION_DOWN("Saturation (-10%)", new SaturationDownStrategy()),
+    BRIGHTNESS_UP("Helligkeit (+10%)", new BrightnessUpStrategy()),
+    BRIGHTNESS_DOWN("Helligkeit (-10%)", new BrightnessDownStrategy());
 
     private final String name;
 
