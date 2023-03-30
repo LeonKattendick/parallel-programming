@@ -3,21 +3,23 @@ package at.technikum.processor;
 import at.technikum.processor.listener.ResizeListener;
 import at.technikum.processor.ui.ControlPanel;
 import at.technikum.processor.ui.ImagePanel;
+import at.technikum.processor.util.CoreUtil;
 import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Getter
 public class ImageProcessor extends JFrame {
 
+    public static final ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(CoreUtil.getNumberOfProcessors());
+
     @Getter
     private static ImageProcessor instance;
 
-    @Getter
-    private static final ForkJoinPool forkJoinPool = new ForkJoinPool();
 
     private final ControlPanel controlPanel;
 
