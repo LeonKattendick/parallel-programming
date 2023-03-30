@@ -63,7 +63,7 @@ public class ControlPanel extends JPanel {
 
     public void switchParallelState() {
         parallelEnabled = !parallelEnabled;
-        parallelSwitchButton.setText(parallelEnabled ? "Parallel" : "Seriell");
+        parallelSwitchButton.setText(parallelEnabled ? "Parallel" : "Sequentiell");
     }
 
     public void writeTime(long time) {
