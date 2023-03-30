@@ -8,7 +8,6 @@ import at.technikum.processor.util.ImageAction;
 import lombok.Getter;
 
 import javax.swing.*;
-import java.awt.*;
 
 @Getter
 public class ControlPanel extends JPanel {

@@ -4,9 +4,10 @@ import at.technikum.processor.ImageProcessor;
 import at.technikum.processor.util.ParallelismUtil;
 import at.technikum.processor.util.strategy.ImageStrategy;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class InvertStrategy implements ImageStrategy {
+public class HueStrategy implements ImageStrategy {
 
     @Override
     public void convertSerial(BufferedImage image) {
@@ -14,7 +15,7 @@ public class InvertStrategy implements ImageStrategy {
             for (int y = 0; y < image.getHeight(); ++y) {
 
                 int rgb = image.getRGB(x, y);
-                int gray = calculateInvertForPixel(rgb);
+                int gray = calculateHueForPixel(rgb);
 
                 image.setRGB(x, y, gray);
             }
@@ -29,7 +30,7 @@ public class InvertStrategy implements ImageStrategy {
                 for (int y = 0; y < image.getHeight(); ++y) {
 
                     int rgb = image.getRGB(x, y);
-                    int gray = calculateInvertForPixel(rgb);
+                    int gray = calculateHueForPixel(rgb);
 
                     image.setRGB(x, y, gray);
                 }
@@ -38,16 +39,15 @@ public class InvertStrategy implements ImageStrategy {
         ImageProcessor.getInstance().getImagePanel().replaceImage(image);
     }
 
-    private int calculateInvertForPixel(int rgb) {
+    private int calculateHueForPixel(int rgb) {
 
         int r = (rgb >> 16) & 0xFF;
         int g = (rgb >> 8) & 0xFF;
         int b = (rgb & 0xFF);
 
-        int rr = 255 - r;
-        int gg = 255 - g;
-        int bb = 255 - b;
+        float[] hsb = Color.RGBtoHSB(r, g, b, null);
+        float hue = hsb[0] + 0.1f;
 
-        return (rr << 16) | (gg << 8) | bb;
+        return Color.HSBtoRGB(hue, hsb[1], hsb[2]);
     }
 }
